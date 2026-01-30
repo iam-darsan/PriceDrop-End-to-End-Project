@@ -57,7 +57,7 @@ const PriceHistoryChart: React.FC<PriceHistoryChartProps> = ({ history, alerts, 
             dot={{ r: 3 }}
             activeDot={{ r: 5 }}
           />
-          {activeAlerts.map((alert, index) => (
+          {activeAlerts.map((alert) => (
             <ReferenceLine
               key={alert.id}
               y={parseFloat(alert.target_price.toString())}

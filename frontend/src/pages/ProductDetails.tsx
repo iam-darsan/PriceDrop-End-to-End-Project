@@ -6,7 +6,7 @@ import AlertForm from '@/components/alerts/AlertForm';
 import AlertList from '@/components/alerts/AlertList';
 import { Product, PriceAlert, PriceHistory } from '@/types';
 import { productService } from '@/services/products';
-import { formatCurrency, formatRelativeTime, truncateText } from '@/utils/formatters';
+import { formatCurrency, formatRelativeTime } from '@/utils/formatters';
 import { ArrowLeftIcon, LinkIcon, PauseIcon, PlayIcon } from '@heroicons/react/24/outline';
 
 const ProductDetails: React.FC = () => {

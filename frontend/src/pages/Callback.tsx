@@ -8,20 +8,23 @@ const Callback: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = searchParams.get('token');
-    
-    if (token) {
-      login(token)
-        .then(() => {
+    const handleCallback = async () => {
+      const token = searchParams.get('token');
+
+      if (token) {
+        try {
+          await login(token);
           navigate('/dashboard');
-        })
-        .catch((error) => {
+        } catch (error: unknown) {
           console.error('Login failed:', error);
           navigate('/login');
-        });
-    } else {
-      navigate('/login');
-    }
+        }
+      } else {
+        navigate('/login');
+      }
+    };
+
+    handleCallback();
   }, [searchParams, login, navigate]);
 
   return (
