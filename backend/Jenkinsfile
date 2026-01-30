@@ -1,0 +1,66 @@
+pipeline {
+  agent any
+
+  environment {
+    AWS_REGION = "ap-south-1"
+    AWS_ACCOUNT_ID = "313712213829"
+    ECR_REPO = "pricedrop-backend"
+    IMAGE_TAG = "latest"
+  }
+
+  stages {
+
+    stage('Checkout Code') {
+      steps {
+        checkout scm
+      }
+    }
+
+    stage('Login to ECR') {
+      steps {
+        sh '''
+          aws ecr get-login-password --region $AWS_REGION \
+          | docker login --username AWS --password-stdin \
+          $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
+        '''
+      }
+    }
+
+    stage('Build Docker Image') {
+      steps {
+        dir('backend') {
+          sh '''
+            docker build -t $ECR_REPO:$IMAGE_TAG .
+          '''
+        }
+      }
+    }
+
+    stage('Tag Image') {
+      steps {
+        sh '''
+          docker tag $ECR_REPO:$IMAGE_TAG \
+          $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPO:$IMAGE_TAG
+        '''
+      }
+    }
+
+    stage('Push Image to ECR') {
+      steps {
+        sh '''
+          docker push \
+          $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPO:$IMAGE_TAG
+        '''
+      }
+    }
+  }
+
+  post {
+    success {
+      echo "✅ Backend image pushed to ECR successfully"
+    }
+    failure {
+      echo "❌ Backend pipeline failed"
+    }
+  }
+}
