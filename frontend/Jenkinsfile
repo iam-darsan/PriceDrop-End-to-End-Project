@@ -2,22 +2,55 @@ pipeline {
   agent any
 
   tools {
-    nodejs 'node25'
+    nodejs 'node18'
+  }
+
+  environment {
+    AWS_REGION = "ap-south-1"
+    S3_BUCKET  = "pricedropper-frontend-bucket-30-1-2026"
   }
 
   stages {
+
+    stage('Checkout Code') {
+      steps {
+        checkout scm
+      }
+    }
+
     stage('Install Dependencies') {
       steps {
-        sh 'node -v'
-        sh 'npm -v'
-        sh 'npm install'
+        dir('frontend') {
+          sh 'npm install'
+        }
       }
     }
 
     stage('Build Frontend') {
       steps {
-        sh 'npm run build'
+        dir('frontend') {
+          sh 'npm run build'
+        }
       }
+    }
+
+    stage('Upload to S3') {
+      steps {
+        dir('frontend') {
+          sh '''
+            aws s3 sync dist/ s3://$S3_BUCKET --delete
+          '''
+        }
+      }
+    }
+  }
+
+  post {
+    success {
+      echo "✅ Frontend deployed successfully to S3"
+    }
+    failure {
+      echo "❌ Frontend deployment failed"
     }
   }
 }
