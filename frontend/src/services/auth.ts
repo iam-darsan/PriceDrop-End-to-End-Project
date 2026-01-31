@@ -1,7 +1,7 @@
 import api from './api';
 import { User } from '@/types';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+const API_BASE_URL = 'https://api.pricedrop24.shop';
 
 export const authService = {
   getLoginUrl: () => {
