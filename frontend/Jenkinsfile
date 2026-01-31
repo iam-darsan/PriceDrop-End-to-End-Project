@@ -1,6 +1,10 @@
 pipeline {
   agent any
 
+  environment{
+    VITE_API_URL = "https://api.pricedrop24.shop"
+  }
+
   tools {
     nodejs 'node18'
   }
