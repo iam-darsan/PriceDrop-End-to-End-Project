@@ -16,12 +16,14 @@ app = FastAPI(
 
 app.add_middleware(
     SessionMiddleware,
-    secret_key=secrets.token_urlsafe(32)
+    secret_key=settings.JWT_SECRET_KEY
+    same_site="none",
+    https_only=True
 )
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[settings.FRONTEND_URL, "http://localhost:5173"],
+    allow_origins=[settings.FRONTEND_URL],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
