@@ -16,7 +16,7 @@ app = FastAPI(
 
 app.add_middleware(
     SessionMiddleware,
-    secret_key=settings.JWT_SECRET_KEY
+    secret_key=settings.JWT_SECRET_KEY,
     same_site="none",
     https_only=True
 )
